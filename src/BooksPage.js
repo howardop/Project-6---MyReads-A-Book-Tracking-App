@@ -24,7 +24,7 @@ class BooksPage extends React.Component {
                           .filter(book => book.shelf === 'currentlyReading')
                           .map( book => (
                              <li key={book.id}>
-                                <Book coverUrl={book.imageLinks.thumbnail} bookTitle={book.title} bookAuthors={book.authors}/>
+                                <Book book={book} changeShelf={this.props.changeShelf} />
                              </li>
                           ))}
                       
@@ -55,7 +55,7 @@ class BooksPage extends React.Component {
                           .filter(book => book.shelf === 'wantToRead')
                           .map( book => (
                              <li key={book.id}>
-                                <Book coverUrl={book.imageLinks.thumbnail} bookTitle={book.title} bookAuthors={book.authors}/>
+                                <Book book={book} changeShelf={this.props.changeShelf} />
                              </li>
                           ))}
   
@@ -70,7 +70,7 @@ class BooksPage extends React.Component {
                           .filter(book => book.shelf === 'read')
                           .map( book => (
                              <li key={book.id}>
-                                <Book coverUrl={book.imageLinks.thumbnail} bookTitle={book.title} bookAuthors={book.authors}/>
+                                <Book book={book} changeShelf={this.props.changeShelf} />
                              </li>
                           ))}
                       {/*

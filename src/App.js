@@ -5,18 +5,37 @@ import BooksPage from './BooksPage'
 import SearchPage from './SearchPage'
 
 class BooksApp extends React.Component {
+
+  constructor() {
+    super();
+    // Need the next line because React doesn't automatically bind functions to the current object
+    // In this program changeShelf is passed to BooksPage, and then Book where it is actually called
+    // Without autobinding, changeShelf is associated with Book and not BooksApp.  
+    // Thus when used, React geneates an error saying 
+    // "Unhandled Rejection (TypeError): _this3.setState is not a function"
+    // Using the bind function, guarantees that changeShelf is associated with BooksApp regardless of 
+    // where its called from and corrects the error
+    this.changeShelf = this.changeShelf.bind(this);
+  }
   
   state = {
-    books: [],
-    showSearchPage: false
+    books: []
   }
 
   componentDidMount() {
       BooksAPI.getAll().then( (books) => {
-        this.setState({books});
-        console.log(this.state.books);
+        this.setState({books: books})
       })
-      
+  }
+
+  
+  changeShelf(book, newShelf){
+    BooksAPI.update(book, newShelf)
+    
+    BooksAPI.getAll().then( (books) => {
+      this.setState({books: books})
+    })
+
   }
 
 
@@ -25,11 +44,12 @@ class BooksApp extends React.Component {
       <div className="app">
         {this.state.showSearchPage ?  
           <SearchPage /> : 
-          <BooksPage books={this.state.books}/>  
+          <BooksPage books={this.state.books} changeShelf={this.changeShelf}/>  
         }
       </div>
     )
   }
+
 }
 
 export default BooksApp
