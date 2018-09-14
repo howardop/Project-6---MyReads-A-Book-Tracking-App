@@ -1,33 +1,14 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 
 class SearchPage extends React.Component {
-    constructor() {
-        super();
-        // Need the next line because React doesn't automatically bind functions to the current object
-        // In this program changeShelf is passed to BooksPage, and then Book where it is actually called
-        // Without autobinding, changeShelf is associated with Book and not BooksApp.  
-        // Thus when used, React geneates an error saying 
-        // "Unhandled Rejection (TypeError): _this3.setState is not a function"
-        // Using the bind function, guarantees that changeShelf is associated with BooksApp regardless of 
-        // where its called from and corrects the error
-        this.changeShelf = this.changeShelf.bind(this);
-      }
-    
+
     state = {
         query: '',
         booksFound: []
     }
-
-    changeShelf = (book, newShelf) => {
-        console.log(`SearchPage changeShelf: newShelf=${newShelf}`)
-        BooksAPI.update(book, newShelf)
-        
-        BooksAPI.search(this.state.query).then((booksFound) =>             
-                this.setState({ booksFound: booksFound }))
-                
-      }
 
     updateQuery = (query) => {
         this.setState({ query: query })
@@ -40,28 +21,22 @@ class SearchPage extends React.Component {
                 if (booksFound.length > 0) {
                     this.setState({ booksFound: booksFound })
                 } else {
-                    this.setState({booksFound: []});
+                    this.setState({ booksFound: [] });
                 }
             })
         } else {
-            this.setState({booksFound: []});
+            this.setState({ booksFound: [] });
         }
     }
 
     render() {
-         return (
+        return (
             <div className="search-books">
                 <div className="search-books-bar">
-                    <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
+                    <Link to='/' className="close-search" >
+                        Close
+                    </Link>
                     <div className="search-books-input-wrapper">
-                        {/*
-                    NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                    You can find these search terms here:
-                    https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                    However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                    you don't find a specific author or title. Every search is limited by search terms.
-                */}
                         <input
                             type="text"
                             placeholder="Search by title or author"
@@ -76,11 +51,27 @@ class SearchPage extends React.Component {
                 <div className="search-books-results">
                     <ol className="books-grid">
                         {
-                            this.state.booksFound.map(book => (
-                                <li key={book.id}>
-                                    <Book book={book} changeShelf={this.changeShelf}/>
-                                </li>
-                            ))
+                            this.state.booksFound.map(bookFound => {
+                                let shelf = "none";
+
+                                this.props.books.map(function(book) {
+                                    if (book.id === bookFound.id) {
+                                        shelf = book.shelf;
+                                    }
+                                    //ESLint expects return value if use { } instead of (), otherwise get warning message
+                                    return 0
+
+                                })
+
+                                return (
+                                    <li key={bookFound.id}>
+                                        <Book book={bookFound}
+                                            changeShelf={this.props.changeShelf}
+                                            currentShelf={shelf}
+                                        />
+                                    </li>
+                                );
+                            })
                         }
                     </ol>
                 </div>

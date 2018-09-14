@@ -1,4 +1,5 @@
 import React from 'react'
+import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import MainPage from './MainPage'
@@ -31,6 +32,7 @@ class BooksApp extends React.Component {
 
   
   changeShelf(book, newShelf){
+    console.log(`app changeShelf: new shelf is ${newShelf}`)
     BooksAPI.update(book, newShelf)
     
     BooksAPI.getAll().then( (books) => {
@@ -43,10 +45,18 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ?  
-          <SearchPage /> : 
-          <MainPage books={this.state.books} changeShelf={this.changeShelf}/>  
-        }
+
+        <Route exact path="/" render={() => (
+            <MainPage 
+              books={this.state.books} 
+              changeShelf={this.changeShelf}
+            />  
+        )} />
+
+        <Route  path="/search" render={() => (
+          <SearchPage books={this.state.books} changeShelf={this.changeShelf}/>  
+        )} />
+
       </div>
     )
   }
