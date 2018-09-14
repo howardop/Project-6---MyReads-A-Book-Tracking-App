@@ -6,7 +6,7 @@ import SearchPage from './SearchPage'
 
 class BooksApp extends React.Component {
 
-  constructor() {
+   constructor() {
     super();
     // Need the next line because React doesn't automatically bind functions to the current object
     // In this program changeShelf is passed to BooksPage, and then Book where it is actually called
@@ -19,6 +19,7 @@ class BooksApp extends React.Component {
   }
   
   state = {
+    showSearchPage: false,
     books: []
   }
 
