@@ -10,8 +10,10 @@ class SearchPage extends React.Component {
         booksFound: []
     }
 
+    // Called each time a character is added to or deleted from the seach field.
     updateQuery = (query) => {
         this.setState({ query: query })
+        // Search the library on each change
         this.searchBooks(query);
     }
 
@@ -54,7 +56,8 @@ class SearchPage extends React.Component {
                             this.state.booksFound.map(bookFound => {
                                 let shelf = "none";
 
-                                this.props.books.map(function(book) {
+                                // Make sure that each book returned by the search function displays the correct shelf
+                                this.props.books.map(function (book) {
                                     if (book.id === bookFound.id) {
                                         shelf = book.shelf;
                                     }
