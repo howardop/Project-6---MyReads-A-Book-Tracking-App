@@ -34,12 +34,19 @@ class BooksApp extends React.Component {
   
   changeShelf(book, newShelf){
     console.log(`app changeShelf: new shelf is ${newShelf}`)
+
+    // Update local copy of book and rerender so user can see change immediately without waiting 
+    //  for the update and getAll calls to complete
+    book.shelf = newShelf;
+    this.setState(this.state.books);
+       
     BooksAPI.update(book, newShelf)
-    
+
+    // Now update library
     BooksAPI.getAll().then( (books) => {
       this.setState({books: books})
     })
-
+ 
   }
 
 
